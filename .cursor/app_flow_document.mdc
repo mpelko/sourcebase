@@ -1,0 +1,28 @@
+---
+description: Describes the interaction of the user with the service.
+globs: 
+alwaysApply: false
+---
+# App Flow Document
+
+User interacts with sourcebase in two ways:
+
+1. They update the underlying document store (add, update or remove documents).
+2. They issue requests / queries to the LLM that are based on the information found in those documents.
+
+## Updating the document store
+
+### Adding documents
+
+The user is able to add an individual document or point to a folder on the local file system with the documents that would be added to the knowledge database (recursively).
+
+### Removing documents
+
+The user is able to select a number of documents and remove them from the base. In order to achieve this the user must be presented with a view to all of the documents and allowed to filter them by the metadata such as Title, Author, date of publication, ...
+
+## Issue of requests or queries
+
+The interface here is a chat-like interface where the expert and the LLM interact with the source base used as a context. Beyond the pure textual responses of the LLM: 
+
+* the reposnse should allow for the attached references from the documents from the source base.
+* the repsponse includes a link to copy the output to clipboard of the expert.

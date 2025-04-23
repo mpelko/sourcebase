@@ -1,0 +1,27 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project Requirements Document (PRD)
+
+1. Project overview
+
+sourcebase helps a human expert in a field maintain their personal knowledge base and extend it as time goes by. The knowledge base is based on sources (set of documents) that the expert initially provides to the system. It is assumed that the documents are from the area of the expertise that the human has and that the human is largely aware of the content of those documents.
+
+Based on those, the expert can leverage an LLM or VLM to interact about the content of that knowledge base with such a model. Furthermore, the knowledge base should be able to get expanded with addition of new documents.
+
+
+2. Examples of interactions of the human expert (user) with the system
+
+* Search for a source of some informantion: The human expert is a aware of some information from within the body of sources, but is looking for the source of that information.
+
+* Answering specific questions based on the information contained in the sources: The expert would like to answer some question they might have and suspect the required information needed is present in the sources. They would like for the LLM to find that answer that could be present in one or more of the source documents.
+
+* Creating summaries with references: Similar to the above, the expert could ask for a more comprehensive review of a certain topic based on the documents from the source base. That review would typically need to include the references to the documents used within the review.
+
+3. Out of scope for the project at this stage
+
+* Automated extending of the source base. The expert should have an interface to add those documents themselves and not expect the base to grow automatically.
+
+* Sharing of the source base with others. This base would be personal to the expert.
