@@ -1,0 +1,56 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Sourcebase: Tech Stack Document
+
+In the following we are assuming the solution is running on a local workstation of the expert with the only exception being the ability to source LLM responses from a prespecified entrypoint.
+
+Still the system should be build in a way such that any component can be exchanged for a solution running on some cloud service.
+
+## Components
+
+* Document store
+* Document metadata store
+* Document vector store
+* Server serving sourcebase in browser
+* Web-based user interface
+
+## Document store
+
+The documents that are added to the Sourcebase are stored here. The first implementation should use the local POSIX compliant file system for storage. The interface should be defined such that this can be exchanged by some cloud object storage in the future (e.g. S3 or GCS).
+
+## Document metadata store
+
+This is a relational database that for each document adds a number of fields such as:
+* Author
+* Title
+* Date (can only be year)
+* type (PDF, DOC, HTML, ...)
+* Date added
+
+For the first implementation this should be a SQLite database residing on the workstation but the interfaces defined should allow for exchanging this with an appropriate relation database solution (local or cloud-based).
+
+Documentation for SQLite: https://www.sqlite.org/docs.html
+
+## Document vector store
+
+The contents of the documents need to be chunked and indexed with the respective embeddings stored locally in a searchable vector store. Primarly this will be searched for RAG purposes to the LLM. For the first implementation this should be a FAISS in combination with SQLLite mentioned above.
+
+Documentation for FAISS: https://github.com/facebookresearch/faiss
+
+## Backend: Server serving the sourcebase in browser
+
+This should be a Flask-based solution that has interfaces defined to the underlying stores.
+
+Eventually this could be transitioned to Node.js/Typescript. 
+
+## Frontend: Web-based UI solution to be used in browsers
+
+The front end should be developed using TypeScript and React. For CSS handling use Tailwind CSS.
+
+Documentaiton for TypeScript: https://www.typescriptlang.org/docs/
+Documentaiton for React: https://react.dev/learn/typescript
+Documentation for React with TypeScript: https://react.dev/learn/typescript
+Documentation for Tailwind CSS: https://tailwindcss.com/docs/installation/using-vite
