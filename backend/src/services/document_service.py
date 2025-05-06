@@ -1,3 +1,4 @@
+import uuid
 from typing import Any, Optional
 
 from ..interfaces.llm import LLM, Message
@@ -17,8 +18,9 @@ class DocumentService:
         embeddings = await self.llm.get_embeddings([text])
 
         # Create a vector
+        vector_id = str(uuid.uuid4())
         vector = Vector(
-            id=f"doc_{len(embeddings)}",  # Simple ID generation, should be improved
+            id=vector_id,
             embedding=embeddings[0],
             metadata=metadata,
             text=text,

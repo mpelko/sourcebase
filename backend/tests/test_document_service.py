@@ -1,7 +1,6 @@
 """Tests for the DocumentService."""
 
 import pytest
-
 from src.services.document_service import DocumentService
 
 

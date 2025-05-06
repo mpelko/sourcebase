@@ -3,7 +3,6 @@
 from typing import AsyncGenerator, List, Optional
 
 import pytest
-
 from src.interfaces.llm import LLM, LLMResponse, Message
 from src.interfaces.vector_db import Vector, VectorDB
 
@@ -38,8 +37,8 @@ class MockVectorDB(VectorDB):
 class MockLLM(LLM):
     """Mock implementation of LLM for testing."""
 
-    def __init__(self):
-        self.max_context_length = 4096
+    def __init__(self, max_context: int = 4096):
+        self._max_context_length = max_context  # Use an internal variable
 
     async def generate(
         self,
@@ -55,6 +54,11 @@ class MockLLM(LLM):
     async def get_embeddings(self, texts: List[str]) -> List[List[float]]:
         # Return mock embeddings (all zeros)
         return [[0.0] * 1536 for _ in texts]
+
+    @property
+    def max_context_length(self) -> int:
+        """Get the maximum context length supported by the LLM."""
+        return self._max_context_length
 
 
 @pytest.fixture

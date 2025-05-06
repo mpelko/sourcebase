@@ -52,7 +52,7 @@ To run the linters and tests:
 ruff format .
 
 # Check types
-mypy src/
+mypy backend/src/
 
 # Run tests
 pytest
