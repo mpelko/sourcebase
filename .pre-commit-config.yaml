@@ -12,5 +12,12 @@ repos:
       - id: mypy
         additional_dependencies:
           - "pydantic>=2.0.0"
+          - "flask>=3.0.0" 
         args: [--strict]
-        files: ^src/ 
+        files: ^src/
+
+  # - repo: meta
+  #   hooks:
+  #   -   id: identity
+  #       args: [--strict]
+  #       files: ^src/

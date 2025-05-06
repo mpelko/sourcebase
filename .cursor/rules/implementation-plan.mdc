@@ -1,0 +1,190 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Implementation Plan
+
+## Phase 1: Project Setup and Core Backend Infrastructure
+
+1. **Project Restructuring**
+   - Create backend directory structure
+   ```
+   backend/
+   ├── src/
+   │   ├── document_store/
+   │   ├── metadata_store/
+   │   ├── vector_store/
+   │   ├── api/
+   │   └── services/
+   └── tests/
+   ```
+   - Set up Flask application structure
+   - Configure SQLite database
+   - Set up FAISS integration
+
+2. **Core Interfaces and Models**
+   ```python
+   # Document models
+   class Document:
+       id: str
+       title: str
+       author: Optional[str]
+       date: Optional[datetime]
+       doc_type: DocumentType # e.g., PDF, DOCX, HTML, TXT
+       date_added: datetime
+       file_path: str
+
+   # Store interfaces
+   class DocumentStore(Protocol):
+       def save(self, content: bytes, metadata: Document) -> str: ...
+       def load(self, doc_id: str) -> bytes: ...
+       def delete(self, doc_id: str) -> None: ...
+
+   class MetadataStore(Protocol):
+       def add_document(self, doc: Document) -> None: ...
+       def get_document(self, doc_id: str) -> Document: ...
+       def list_documents(self, filters: dict) -> List[Document]: ...
+       def delete_document(self, doc_id: str) -> None: ...
+
+   class VectorStore(Protocol):
+       def add_embeddings(self, doc_id: str, chunks: List[TextChunk]) -> None: ... # TextChunk would be another model
+       def search(self, query_embedding: np.ndarray, top_k: int) -> List[SearchResult]: ... # SearchResult another model
+       def delete_document(self, doc_id: str) -> None: ...
+   ```
+
+## Phase 2: Storage Implementation
+
+1. **Document Store Implementation**
+   - Implement POSIX-based file system storage
+   - Add support for different document types (PDF, DOC, HTML, TXT)
+   - Implement file handling utilities
+
+2. **Metadata Store Implementation**
+   - Design SQLite schema
+   ```sql
+   CREATE TABLE documents (
+       id TEXT PRIMARY KEY,
+       title TEXT NOT NULL,
+       author TEXT,
+       pub_date DATE, -- Store as YYYY-MM-DD or YYYY
+       doc_type TEXT NOT NULL,
+       date_added TIMESTAMP NOT NULL,
+       file_path TEXT NOT NULL
+   );
+   ```
+   - Implement SQLite-based metadata store
+   - Add indexing and query optimization
+
+3. **Vector Store Implementation**
+   - Implement FAISS-based vector store
+   - Add SQLite integration for metadata linkage (e.g., storing FAISS index IDs with document IDs)
+   - Implement chunking strategies (e.g., fixed size, recursive, semantic)
+   - Add embedding generation and storage
+
+## Phase 3: Backend Services and API
+
+1. **Document Processing Service**
+   - Implement document parsing for different formats (PDF, DOCX, HTML, TXT using MarkItDown for PDF/DOCX)
+   - Add text extraction
+   - Implement chunking logic
+   - Add embedding generation (interfacing with an LLM service or library)
+
+2. **Search Service**
+   - Implement semantic search using the VectorStore
+   - Add metadata filtering (combining vector search results with MetadataStore queries)
+   - Implement relevance scoring and ranking
+
+3. **Flask API Implementation**
+   ```
+   /api/v1/
+   ├── documents/
+   │   ├── POST /              # Add document (handle file upload, metadata input)
+   │   ├── GET /               # List documents (with filtering and pagination)
+   │   ├── GET /{id}           # Get document details
+   │   └── DELETE /{id}        # Delete document (from all stores)
+   ├── search/
+   │   └── POST /              # Search documents (query, filters, top_k)
+   └── chat/
+       └── POST /              # Chat with context (RAG: retrieve, augment, generate)
+   ```
+
+## Phase 4: Frontend Setup
+
+1. **Project Structure**
+   ```
+   frontend/
+   ├── src/
+   │   ├── components/         # Reusable UI elements
+   │   ├── pages/              # Top-level page components
+   │   ├── services/           # API interaction logic
+   │   ├── types/              # TypeScript type definitions
+   │   ├── contexts/           # React contexts for global state if needed
+   │   └── App.tsx
+   ├── tailwind.config.js
+   └── package.json
+   ```
+
+2. **Core Components**
+   - Document upload component (with progress)
+   - Document list/grid view (with sorting, filtering, pagination)
+   - Search interface (input field, filter options)
+   - Chat interface (message display, input, history)
+   - Source reference display (collapsible, links to original content if possible)
+
+## Phase 5: Frontend Implementation
+
+1. **Document Management**
+   - Implement document upload functionality
+   - Add document list view with interactive filtering and sorting based on metadata
+   - Add document deletion capability
+   - Implement metadata display and editing (optional)
+
+2. **Search and Chat Interface**
+   - Implement chat-like interface for LLM interaction
+   - Display search results with source references from documents
+   - Implement clipboard functionality for copying responses/references
+   - Add loading states, error handling, and user feedback
+
+## Phase 6: Integration and Testing
+
+1. **Integration Testing**
+   - Backend: API endpoint tests (using pytest with Flask test client)
+   - Frontend: Component and integration tests (e.g., using React Testing Library, Vitest)
+   - End-to-end testing (e.g., using Playwright or Cypress)
+   - Performance testing for critical paths (e.g., document ingestion, search)
+
+2. **Documentation**
+   - API documentation (e.g., using OpenAPI/Swagger)
+   - Setup and deployment instructions
+   - User guide for interacting with the application
+
+## Phase 7: Optimization and Polish
+
+1. **Performance Optimization**
+   - Optimize vector search (e.g., FAISS index tuning)
+   - Add caching where appropriate (e.g., API responses, embeddings)
+   - Optimize document processing pipeline (e.g., parallel processing for bulk ingest)
+
+2. **UI/UX Improvements**
+   - Add comprehensive loading states and progress indicators
+   - Improve error handling and user feedback mechanisms
+   - Polish UI interactions and animations for a smoother experience
+
+# Dependencies and Technology Stack
+
+## Backend
+- Python 3.12+
+- Flask
+- SQLite
+- FAISS
+- MarkItDown (for PDF and DOC processing)
+- beautifulsoup4 (for HTML processing)
+- A library for LLM embeddings and generation (e.g., OpenAI, SentenceTransformers)
+
+## Frontend
+- TypeScript
+- React
+- Tailwind CSS
+- Axios (for API calls)
+- React Query or similar (for server state management)
