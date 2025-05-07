@@ -81,4 +81,20 @@ To run the Flask development server:
    python run.py
    ```
 
-The server will start, typically on `http://127.0.0.1:5000/`. You can access the sample `/hello` route at `http://120.0.1:5000/hello`. 
+The server will start, typically on `http://127.0.0.1:5000/`. You can access the sample `/hello` route at `http://120.0.1:5000/hello`.
+
+### Initializing the Database
+
+Before running the application for the first time, or if you need to reset the database, initialize it using the Flask CLI:
+
+1. Make sure your virtual environment is activated and you are in the workspace root directory.
+2. Set the `FLASK_APP` environment variable:
+   ```bash
+   export FLASK_APP=backend/src/api
+   ```
+   (On Windows, use `set FLASK_APP=backend\src\api`)
+3. Run the initialization command:
+   ```bash
+   flask init-db
+   ```
+This will create the `metadata.db` file in the `backend/instance/` directory with the necessary tables. 
