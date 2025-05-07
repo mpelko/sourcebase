@@ -25,6 +25,7 @@ test = [
     "pytest-mock>=3.10.0",
     "pre-commit>=3.0.0",
     "mypy>=1.0.0",
+    "ruff>=0.3.0",
 ]
 
 [build-system]
@@ -36,12 +37,15 @@ packages = ["backend/src"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-testpaths = ["backend/tests"]
+testpaths = ["tests", "backend/tests"]
 python_files = ["test_*.py"]
 addopts = [
     "--cov=backend/src",
     "--cov-report=term-missing",
     "--cov-report=html",
+]
+pythonpath = [
+    ".",
 ]
 
 [tool.coverage.run]
