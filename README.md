@@ -67,3 +67,18 @@ pre-commit run --all-files
 ## License
 
 MIT 
+
+## Running the Backend Server
+
+To run the Flask development server:
+
+1. Navigate to the `backend` directory:
+   ```bash
+   cd backend
+   ```
+2. Run the application:
+   ```bash
+   python run.py
+   ```
+
+The server will start, typically on `http://127.0.0.1:5000/`. You can access the sample `/hello` route at `http://120.0.1:5000/hello`. 
